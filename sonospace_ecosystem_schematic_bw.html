@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sonospace — Ecosystem Schematic</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,300;0,400;0,500;0,600;1,300&family=IBM+Plex+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f7f6f3;
+    --ink: #0a0a0a;
+    --ink-mid: #2a2a2a;
+    --ink-light: #555;
+    --ink-dim: #888;
+    --ink-faint: #bbb;
+    --rule: #d0cec8;
+    --rule-mid: #aaa;
+    --white: #ffffff;
+    --fill-light: #efefec;
+    --fill-mid: #e2e0db;
+    --fill-dark: #c8c5be;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'IBM Plex Mono', monospace;
+    min-height: 100vh;
+  }
+
+  .page {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 48px 48px 72px;
+  }
+
+  /* ─── HEADER ─── */
+  .doc-header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 32px;
+    border-top: 2.5px solid var(--ink);
+    border-bottom: 1px solid var(--ink-light);
+    padding: 18px 0 16px;
+    margin-bottom: 40px;
+  }
+
+  .doc-title-block {}
+  .doc-number {
+    font-size: 9px;
+    letter-spacing: 0.22em;
+    color: var(--ink-dim);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+  h1 {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+    color: var(--ink);
+  }
+  h1 span { font-weight: 300; }
+
+  .doc-meta {
+    text-align: right;
+    font-size: 9px;
+    color: var(--ink-dim);
+    letter-spacing: 0.1em;
+    line-height: 2;
+  }
+  .doc-meta strong { color: var(--ink-mid); font-weight: 500; }
+
+  /* ─── LEGEND ─── */
+  .legend {
+    display: flex;
+    gap: 28px;
+    flex-wrap: wrap;
+    align-items: center;
+    border: 1px solid var(--rule);
+    padding: 10px 16px;
+    margin-bottom: 32px;
+    background: var(--white);
+  }
+
+  .legend-group {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .legend-sep {
+    width: 1px;
+    height: 20px;
+    background: var(--rule);
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 9px;
+    letter-spacing: 0.08em;
+    color: var(--ink-mid);
+    white-space: nowrap;
+  }
+
+  .l-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    border: 1.5px solid var(--ink);
+    flex-shrink: 0;
+  }
+  .l-dot.filled { background: var(--ink); }
+  .l-dot.hub { width: 14px; height: 14px; background: var(--ink); }
+
+  .l-line { width: 28px; height: 0; flex-shrink: 0; }
+  .l-line.solid { border-top: 2px solid var(--ink); }
+  .l-line.dashed { border-top: 2px dashed var(--ink-mid); }
+  .l-line.dotted { border-top: 2px dotted var(--ink-light); }
+  .l-line.double { border-top: 3px double var(--ink); }
+
+  .l-rect {
+    width: 12px; height: 8px;
+    border: 1.5px solid var(--ink);
+    background: var(--fill-light);
+    flex-shrink: 0;
+  }
+  .l-rect.rev { background: var(--fill-dark); }
+
+  /* ─── MAIN DIAGRAM ─── */
+  .diagram-wrap {
+    background: var(--white);
+    border: 1px solid var(--rule-mid);
+    padding: 0;
+    margin-bottom: 32px;
+    position: relative;
+  }
+
+  .diagram-label-top {
+    padding: 7px 14px;
+    border-bottom: 1px solid var(--rule);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--fill-light);
+  }
+
+  .diagram-label-top span {
+    font-size: 8px;
+    letter-spacing: 0.2em;
+    color: var(--ink-dim);
+    text-transform: uppercase;
+  }
+
+  svg.schematic {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* ─── REVENUE TABLE ─── */
+  .rev-section {
+    margin-bottom: 32px;
+  }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    border-bottom: 1.5px solid var(--ink);
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+  }
+
+  .section-head h2 {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  .section-head span {
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    color: var(--ink-dim);
+  }
+
+  .rev-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule-mid);
+  }
+
+  .rev-card {
+    background: var(--white);
+    padding: 14px 14px 12px;
+    position: relative;
+  }
+
+  .rev-card-inner {
+    border-top: 2px solid var(--ink);
+    padding-top: 10px;
+  }
+
+  .rev-stream-id {
+    font-size: 8px;
+    letter-spacing: 0.2em;
+    color: var(--ink-dim);
+    margin-bottom: 4px;
+  }
+
+  .rev-stream-name {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+
+  .rev-figures {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+  }
+
+  .rev-fig {
+    font-size: 9px;
+    letter-spacing: 0.04em;
+    color: var(--ink-mid);
+  }
+
+  .rev-fig .year { color: var(--ink-dim); font-size: 8px; }
+  .rev-fig .amount { font-weight: 600; color: var(--ink); }
+
+  .rev-arrow {
+    font-size: 8px;
+    color: var(--ink-dim);
+    margin: 0 2px;
+  }
+
+  .rev-source-tag {
+    font-size: 8px;
+    letter-spacing: 0.06em;
+    color: var(--ink-dim);
+    border: 1px solid var(--rule);
+    padding: 1px 5px;
+    display: inline-block;
+    margin-right: 3px;
+    margin-bottom: 3px;
+    background: var(--fill-light);
+  }
+
+  .rev-nfx {
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    color: var(--ink-dim);
+    margin-top: 8px;
+    padding-top: 6px;
+    border-top: 1px solid var(--rule);
+  }
+
+  .rev-nfx strong { color: var(--ink-mid); }
+
+  /* Pricing mini table */
+  .pricing-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 8px;
+    padding: 2px 0;
+    border-bottom: 1px dotted var(--rule);
+    gap: 8px;
+  }
+
+  .pricing-row:last-child { border-bottom: none; }
+
+  .pricing-row .p-type { color: var(--ink-mid); flex: 1; }
+  .pricing-row .p-rate { color: var(--ink); font-weight: 500; white-space: nowrap; }
+
+  /* ─── NE + FLYWHEEL BOTTOM STRIP ─── */
+  .bottom-strip {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule-mid);
+    margin-bottom: 32px;
+  }
+
+  .strip-panel {
+    background: var(--white);
+    padding: 18px;
+  }
+
+  /* Cross-side matrix */
+  table.matrix {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 8.5px;
+  }
+
+  .matrix th, .matrix td {
+    padding: 5px 8px;
+    border: 1px solid var(--rule);
+    text-align: center;
+    vertical-align: middle;
+    line-height: 1.3;
+  }
+
+  .matrix thead th {
+    background: var(--fill-mid);
+    font-size: 8px;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .matrix thead th:first-child {
+    text-align: left;
+    background: var(--fill-dark);
+    font-size: 8px;
+    color: var(--ink-mid);
+  }
+
+  .matrix tbody td:first-child {
+    text-align: left;
+    background: var(--fill-light);
+    font-weight: 600;
+    font-size: 8px;
+    white-space: nowrap;
+    color: var(--ink-mid);
+  }
+
+  .m-hi { font-weight: 700; color: var(--ink); }
+  .m-mid { color: var(--ink-mid); }
+  .m-low { color: var(--ink-dim); }
+  .m-diag { color: var(--ink-faint); }
+
+  /* Flywheel list */
+  .fw-steps {
+    list-style: none;
+    counter-reset: fw;
+  }
+
+  .fw-steps li {
+    counter-increment: fw;
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-bottom: 14px;
+    padding-bottom: 14px;
+    border-bottom: 1px dashed var(--rule);
+  }
+
+  .fw-steps li:last-child { border-bottom: none; margin-bottom: 0; }
+
+  .fw-num {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--fill-dark);
+    line-height: 1;
+    flex-shrink: 0;
+    width: 20px;
+    font-family: 'IBM Plex Sans', sans-serif;
+  }
+
+  .fw-text-wrap {}
+
+  .fw-step-name {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+
+  .fw-step-desc {
+    font-size: 8.5px;
+    color: var(--ink-dim);
+    line-height: 1.55;
+    letter-spacing: 0.02em;
+  }
+
+  .fw-rev-link {
+    font-size: 8px;
+    letter-spacing: 0.06em;
+    color: var(--ink-light);
+    margin-top: 3px;
+  }
+
+  /* ─── FOOTER ─── */
+  .doc-footer {
+    border-top: 1px solid var(--ink-light);
+    border-bottom: 2.5px solid var(--ink);
+    padding: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .footer-left { font-size: 8px; letter-spacing: 0.12em; color: var(--ink-dim); line-height: 1.8; }
+  .footer-right { font-size: 8px; letter-spacing: 0.08em; color: var(--ink-dim); text-align: right; line-height: 1.8; }
+
+  @media (max-width: 960px) {
+    .rev-grid { grid-template-columns: repeat(2, 1fr); }
+    .bottom-strip { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 640px) {
+    .page { padding: 24px 20px 48px; }
+    .rev-grid { grid-template-columns: 1fr; }
+    .doc-header { grid-template-columns: 1fr; }
+    .doc-meta { text-align: left; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- DOCUMENT HEADER -->
+  <div class="doc-header">
+    <div class="doc-title-block">
+      <div class="doc-number">DOC · SPC-STRAT-001 &nbsp;·&nbsp; Network Effects Ecosystem Schematic</div>
+      <h1>Sonospace <span>/ Ecosystem &amp; Revenue Architecture</span></h1>
+    </div>
+    <div class="doc-meta">
+      <strong>Sonospace BV</strong><br>
+      Amsterdam · Berlin<br>
+      Business Plan v6 · July 2024<br>
+      Confidential
+    </div>
+  </div>
+
+  <!-- LEGEND -->
+  <div class="legend">
+    <span style="font-size:8px;letter-spacing:0.2em;color:var(--ink-dim);text-transform:uppercase;">Legend</span>
+    <div class="legend-sep"></div>
+    <div class="legend-group">
+      <div class="legend-item"><div class="l-dot hub"></div>Platform Hub (Sonospace)</div>
+      <div class="legend-item"><div class="l-dot filled"></div>Primary Node</div>
+      <div class="legend-item"><div class="l-dot"></div>Secondary Node</div>
+    </div>
+    <div class="legend-sep"></div>
+    <div class="legend-group">
+      <div class="legend-item"><div class="l-line solid"></div>Value / IP Flow</div>
+      <div class="legend-item"><div class="l-line double"></div>Revenue Flow (€)</div>
+      <div class="legend-item"><div class="l-line dashed"></div>Content Flow</div>
+      <div class="legend-item"><div class="l-line dotted"></div>Cross-side NE</div>
+    </div>
+    <div class="legend-sep"></div>
+    <div class="legend-group">
+      <div class="legend-item"><div class="l-rect"></div>Revenue Stream (outbound)</div>
+      <div class="legend-item"><div class="l-rect rev"></div>Revenue Inflow (to Sonospace)</div>
+    </div>
+  </div>
+
+  <!-- MAIN SCHEMATIC SVG -->
+  <div class="diagram-wrap">
+    <div class="diagram-label-top">
+      <span>Fig. 1 — Six-Sided Ecosystem · Network Effects Topology · Value &amp; Revenue Flows</span>
+      <span>4 NE Types Active · Metcalfe's Law applies · V ∝ n²</span>
+    </div>
+
+    <svg class="schematic" viewBox="0 0 1100 700" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- Arrow heads -->
+        <marker id="arr-blk" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+          <path d="M0,0.5 L0,6.5 L7,3.5 z" fill="#0a0a0a"/>
+        </marker>
+        <marker id="arr-blk-sm" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
+          <path d="M0,0.5 L0,4.5 L5,2.5 z" fill="#0a0a0a"/>
+        </marker>
+        <marker id="arr-mid" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+          <path d="M0,0.5 L0,5.5 L6,3 z" fill="#555"/>
+        </marker>
+        <marker id="arr-dim" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto">
+          <path d="M0,0.5 L0,4.5 L5,2.5 z" fill="#888"/>
+        </marker>
+        <marker id="arr-rev" markerWidth="7" markerHeight="7" refX="1" refY="3.5" orient="auto-start-reverse">
+          <path d="M7,0.5 L7,6.5 L0,3.5 z" fill="#0a0a0a"/>
+        </marker>
+
+        <!-- Grid pattern -->
+        <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+          <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#e8e6e2" stroke-width="0.5"/>
+        </pattern>
+
+        <!-- Hatch pattern for revenue fill -->
+        <pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <line x1="0" y1="0" x2="0" y2="6" stroke="#aaa" stroke-width="0.8"/>
+        </pattern>
+
+        <!-- Cross-hatch for dark fills -->
+        <pattern id="xhatch" width="5" height="5" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+          <line x1="0" y1="0" x2="0" y2="5" stroke="#777" stroke-width="0.8"/>
+        </pattern>
+      </defs>
+
+      <!-- Background grid -->
+      <rect width="1100" height="700" fill="url(#grid)"/>
+      <rect width="1100" height="700" fill="white" fill-opacity="0.55"/>
+
+      <!-- ─── ORBIT REFERENCE RINGS ─── -->
+      <circle cx="550" cy="358" r="185" fill="none" stroke="#ccc" stroke-width="0.75" stroke-dasharray="2 6"/>
+      <circle cx="550" cy="358" r="268" fill="none" stroke="#ddd" stroke-width="0.5" stroke-dasharray="1 8"/>
+
+      <!-- ─── FLOW LINES: VALUE / IP (solid, heavy) ─── -->
+      <!-- Hub ↔ Artists -->
+      <line x1="550" y1="358" x2="210" y2="210" stroke="#0a0a0a" stroke-width="1.8" marker-end="url(#arr-blk)"/>
+      <line x1="218" y1="218" x2="542" y2="352" stroke="#0a0a0a" stroke-width="1.2" stroke-dasharray="5 0" marker-end="url(#arr-rev)"/>
+
+      <!-- Hub ↔ Venues -->
+      <line x1="550" y1="358" x2="870" y2="200" stroke="#0a0a0a" stroke-width="1.8" marker-end="url(#arr-blk)"/>
+      <line x1="862" y1="208" x2="558" y2="350" stroke="#0a0a0a" stroke-width="1.2" marker-end="url(#arr-rev)"/>
+
+      <!-- Hub ↔ Audiences -->
+      <line x1="550" y1="358" x2="900" y2="490" stroke="#555" stroke-width="1.4" marker-end="url(#arr-mid)"/>
+      <line x1="893" y1="483" x2="557" y2="365" stroke="#555" stroke-width="0.9" stroke-dasharray="4 3" marker-end="url(#arr-rev)"/>
+
+      <!-- Hub ↔ Education -->
+      <line x1="550" y1="358" x2="190" y2="500" stroke="#555" stroke-width="1.4" marker-end="url(#arr-mid)"/>
+      <line x1="197" y1="493" x2="543" y2="365" stroke="#555" stroke-width="0.9" stroke-dasharray="4 3" marker-end="url(#arr-rev)"/>
+
+      <!-- Hub ↔ Investors -->
+      <line x1="550" y1="358" x2="550" y2="102" stroke="#0a0a0a" stroke-width="2" stroke-dasharray="6 3" marker-end="url(#arr-blk)"/>
+      <line x1="554" y1="106" x2="554" y2="354" stroke="#0a0a0a" stroke-width="1.5" stroke-dasharray="6 3" marker-end="url(#arr-rev)"/>
+
+      <!-- Hub ↔ Software Users -->
+      <line x1="550" y1="358" x2="350" y2="580" stroke="#555" stroke-width="1.2" marker-end="url(#arr-mid)"/>
+      <line x1="357" y1="574" x2="543" y2="364" stroke="#555" stroke-width="0.9" stroke-dasharray="3 4" marker-end="url(#arr-rev)"/>
+
+      <!-- ─── CROSS-SIDE NE DOTTED ARCS ─── -->
+      <!-- Artists ↔ Venues (content standard) -->
+      <path d="M 258 192 Q 560 110 840 200" fill="none" stroke="#888" stroke-width="1" stroke-dasharray="3 5" marker-end="url(#arr-dim)"/>
+      <!-- Venues → Audiences -->
+      <path d="M 900 220" d="M 905 232 Q 960 350 890 470" fill="none" stroke="#888" stroke-width="0.9" stroke-dasharray="2 5" marker-end="url(#arr-dim)"/>
+      <!-- Artists → Audiences (demand) -->
+      <path d="M 236 240 Q 600 440 872 476" fill="none" stroke="#aaa" stroke-width="0.8" stroke-dasharray="2 5"/>
+      <!-- Education → Artists pipeline -->
+      <path d="M 196 472 Q 152 310 205 248" fill="none" stroke="#aaa" stroke-width="0.8" stroke-dasharray="2 5" marker-end="url(#arr-dim)"/>
+      <!-- SW Users → Artists -->
+      <path d="M 314 564 Q 220 490 210 258" fill="none" stroke="#aaa" stroke-width="0.7" stroke-dasharray="2 6" marker-end="url(#arr-dim)"/>
+
+      <!-- ─── REVENUE FLOW ANNOTATIONS (inline boxes on edges) ─── -->
+
+      <!-- Artists edge: SW licence inflow -->
+      <rect x="295" y="244" width="86" height="16" fill="white" stroke="#0a0a0a" stroke-width="1"/>
+      <rect x="296" y="244" width="4" height="16" fill="#0a0a0a"/>
+      <text x="388" y="254" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#0a0a0a" letter-spacing="0.03em">€36/mo · €400pa ▶</text>
+      <text x="388" y="265" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="6.5" fill="#555">personal licence</text>
+
+      <!-- Artists edge: residency inflow -->
+      <rect x="294" y="275" width="86" height="14" fill="#f0f0ed" stroke="#555" stroke-width="0.8"/>
+      <text x="383" y="285" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="7" fill="#555" letter-spacing="0.02em">residency fee ▶ €102K</text>
+
+      <!-- Venues edge: studio licence inflow -->
+      <rect x="658" y="240" width="90" height="16" fill="white" stroke="#0a0a0a" stroke-width="1"/>
+      <rect x="658" y="240" width="4" height="16" fill="#0a0a0a"/>
+      <text x="748" y="250" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#0a0a0a">€7.2K–€20K pa ▶</text>
+      <text x="748" y="263" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="6.5" fill="#555">studio licence</text>
+
+      <!-- Venues edge: new space fee -->
+      <rect x="660" y="270" width="80" height="14" fill="#f0f0ed" stroke="#555" stroke-width="0.8"/>
+      <text x="740" y="280" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="7" fill="#555">spaces: €618K '26</text>
+
+      <!-- Investors edge: capital -->
+      <rect x="564" y="196" width="78" height="16" fill="white" stroke="#0a0a0a" stroke-width="1" stroke-dasharray="4 2"/>
+      <text x="640" y="207" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#0a0a0a">€2M Series A ▼</text>
+      <text x="640" y="218" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="6.5" fill="#555">investor capital</text>
+
+      <!-- Education edge -->
+      <rect x="282" y="402" width="80" height="14" fill="#f0f0ed" stroke="#555" stroke-width="0.8"/>
+      <text x="362" y="412" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="7" fill="#555">edu: €174K '26 ▶</text>
+
+      <!-- Audiences (experience / tickets) -->
+      <rect x="656" y="395" width="84" height="14" fill="#f0f0ed" stroke="#555" stroke-width="0.8"/>
+      <text x="740" y="405" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="7" fill="#555">tickets/presents ▶</text>
+
+      <!-- SW Users edge -->
+      <rect x="376" y="497" width="76" height="14" fill="white" stroke="#0a0a0a" stroke-width="1"/>
+      <rect x="376" y="497" width="4" height="14" fill="#555"/>
+      <text x="450" y="507" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="7" fill="#0a0a0a">€400pa · 500 lic.</text>
+
+      <!-- ─── HUB: SONOSPACE ─── -->
+      <!-- Outer frame -->
+      <rect x="478" y="286" width="144" height="144" fill="white" stroke="#0a0a0a" stroke-width="2"/>
+      <!-- Inner tick marks (engineering style) -->
+      <line x1="478" y1="316" x2="490" y2="316" stroke="#0a0a0a" stroke-width="0.8"/>
+      <line x1="478" y1="358" x2="490" y2="358" stroke="#0a0a0a" stroke-width="1.2"/>
+      <line x1="478" y1="400" x2="490" y2="400" stroke="#0a0a0a" stroke-width="0.8"/>
+      <line x1="610" y1="316" x2="622" y2="316" stroke="#0a0a0a" stroke-width="0.8"/>
+      <line x1="610" y1="358" x2="622" y2="358" stroke="#0a0a0a" stroke-width="1.2"/>
+      <line x1="610" y1="400" x2="622" y2="400" stroke="#0a0a0a" stroke-width="0.8"/>
+      <!-- Corner crosshairs -->
+      <line x1="478" y1="286" x2="500" y2="286" stroke="#0a0a0a" stroke-width="0.8"/>
+      <line x1="478" y1="286" x2="478" y2="308" stroke="#0a0a0a" stroke-width="0.8"/>
+      <line x1="622" y1="286" x2="600" y2="286" stroke="#0a0a0a" stroke-width="0.8"/>
+      <line x1="622" y1="286" x2="622" y2="308" stroke="#0a0a0a" stroke-width="0.8"/>
+      <line x1="478" y1="430" x2="500" y2="430" stroke="#0a0a0a" stroke-width="0.8"/>
+      <line x1="478" y1="430" x2="478" y2="408" stroke="#0a0a0a" stroke-width="0.8"/>
+      <line x1="622" y1="430" x2="600" y2="430" stroke="#0a0a0a" stroke-width="0.8"/>
+      <line x1="622" y1="430" x2="622" y2="408" stroke="#0a0a0a" stroke-width="0.8"/>
+      <!-- Center cross -->
+      <line x1="550" y1="296" x2="550" y2="420" stroke="#ddd" stroke-width="0.6"/>
+      <line x1="488" y1="358" x2="612" y2="358" stroke="#ddd" stroke-width="0.6"/>
+      <!-- Hub label -->
+      <text x="550" y="322" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#888" letter-spacing="0.2em">4DSOUND TECH</text>
+      <line x1="510" y1="328" x2="590" y2="328" stroke="#ccc" stroke-width="0.6"/>
+      <text x="550" y="342" text-anchor="middle" font-family="IBM Plex Sans, sans-serif" font-size="17" font-weight="700" fill="#0a0a0a" letter-spacing="0.04em">SONOSPACE</text>
+      <line x1="510" y1="348" x2="590" y2="348" stroke="#ccc" stroke-width="0.6"/>
+      <text x="550" y="362" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7" fill="#888" letter-spacing="0.2em">MONOM BERLIN</text>
+      <text x="550" y="376" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7" fill="#888" letter-spacing="0.2em">PLATFORM CORE</text>
+      <!-- Revenue total badge -->
+      <rect x="498" y="388" width="104" height="28" fill="#0a0a0a"/>
+      <text x="550" y="400" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7" fill="white" letter-spacing="0.1em">TOTAL REVENUE</text>
+      <text x="550" y="412" text-anchor="middle" font-family="IBM Plex Sans, sans-serif" font-size="10" font-weight="700" fill="white">€1.88M → '26</text>
+
+      <!-- ─── NODE: ARTISTS ─── -->
+      <rect x="118" y="148" width="134" height="100" fill="white" stroke="#0a0a0a" stroke-width="1.5"/>
+      <rect x="118" y="148" width="134" height="18" fill="#0a0a0a"/>
+      <text x="185" y="161" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="8" fill="white" letter-spacing="0.18em">A · ARTISTS/CREATORS</text>
+      <text x="185" y="184" text-anchor="middle" font-family="IBM Plex Sans, sans-serif" font-size="11" font-weight="700" fill="#0a0a0a">300+ Collaborators</text>
+      <text x="185" y="198" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#555">Residencies · Tours</text>
+      <text x="185" y="211" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#555">Commissions · R&amp;D</text>
+      <text x="185" y="226" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7" fill="#888">NE: Creator supply side</text>
+      <!-- Corner marks -->
+      <line x1="118" y1="148" x2="130" y2="148" stroke="#0a0a0a" stroke-width="1.2"/>
+      <line x1="252" y1="248" x2="240" y2="248" stroke="#0a0a0a" stroke-width="1.2"/>
+
+      <!-- ─── NODE: VENUES ─── -->
+      <rect x="812" y="140" width="154" height="116" fill="white" stroke="#0a0a0a" stroke-width="1.5"/>
+      <rect x="812" y="140" width="154" height="18" fill="#0a0a0a"/>
+      <text x="889" y="153" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="8" fill="white" letter-spacing="0.15em">B · VENUES/STUDIOS</text>
+      <text x="889" y="174" text-anchor="middle" font-family="IBM Plex Sans, sans-serif" font-size="11" font-weight="700" fill="#0a0a0a">6 → 12+ Spaces '26</text>
+      <text x="889" y="188" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#555">MONOM · Mercer NY</text>
+      <text x="889" y="201" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#555">Lobe · Reethaus</text>
+      <text x="889" y="214" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#555">Culture Station Seoul</text>
+      <text x="889" y="232" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7" fill="#888">NE: Venue side (demand)</text>
+
+      <!-- ─── NODE: AUDIENCES ─── -->
+      <rect x="838" y="440" width="140" height="94" fill="white" stroke="#555" stroke-width="1.2" stroke-dasharray="5 2"/>
+      <rect x="838" y="440" width="140" height="17" fill="#555"/>
+      <text x="908" y="452" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="white" letter-spacing="0.15em">C · AUDIENCES</text>
+      <text x="908" y="474" text-anchor="middle" font-family="IBM Plex Sans, sans-serif" font-size="11" font-weight="700" fill="#0a0a0a">100K+ Listeners</text>
+      <text x="908" y="488" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#555">30K Social Followers</text>
+      <text x="908" y="502" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#555">10–12 Experiences '26</text>
+      <text x="908" y="518" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7" fill="#888">NE: Social / Tribal</text>
+
+      <!-- ─── NODE: EDUCATION / RESEARCH ─── -->
+      <rect x="80" y="448" width="150" height="100" fill="white" stroke="#555" stroke-width="1.2" stroke-dasharray="5 2"/>
+      <rect x="80" y="448" width="150" height="17" fill="#555"/>
+      <text x="155" y="460" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="white" letter-spacing="0.12em">D · EDUCATION/RESEARCH</text>
+      <text x="155" y="480" text-anchor="middle" font-family="IBM Plex Sans, sans-serif" font-size="11" font-weight="700" fill="#0a0a0a">EU Horizon · XTREME</text>
+      <text x="155" y="494" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#555">4–7 Workshops pa '26</text>
+      <text x="155" y="507" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#555">€262K grants '25</text>
+      <text x="155" y="521" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#555">HKU Utrecht + others</text>
+      <text x="155" y="536" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7" fill="#888">NE: Expertise pipeline</text>
+
+      <!-- ─── NODE: INVESTORS / PARTNERS ─── -->
+      <rect x="456" y="28" width="188" height="62" fill="white" stroke="#0a0a0a" stroke-width="1.5" stroke-dasharray="6 2"/>
+      <rect x="456" y="28" width="188" height="17" fill="url(#xhatch)"/>
+      <rect x="456" y="28" width="188" height="17" fill="#0a0a0a" fill-opacity="0.75"/>
+      <text x="550" y="40" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="8" fill="white" letter-spacing="0.15em">E · INVESTORS/PARTNERS</text>
+      <text x="550" y="58" text-anchor="middle" font-family="IBM Plex Sans, sans-serif" font-size="11" font-weight="700" fill="#0a0a0a">Series A · €2M Target</text>
+      <text x="550" y="72" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#555">Capital · Network · Credibility</text>
+      <text x="550" y="84" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7" fill="#888">NE: Cold Start accelerator</text>
+
+      <!-- ─── NODE: SOFTWARE USERS ─── -->
+      <rect x="240" y="548" width="140" height="88" fill="white" stroke="#0a0a0a" stroke-width="1.2"/>
+      <rect x="240" y="548" width="140" height="16" fill="url(#hatch)" fill-opacity="0.6"/>
+      <rect x="240" y="548" width="140" height="16" fill="#0a0a0a" fill-opacity="0.6"/>
+      <text x="310" y="559.5" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="white" letter-spacing="0.15em">F · SOFTWARE USERS</text>
+      <text x="310" y="580" text-anchor="middle" font-family="IBM Plex Sans, sans-serif" font-size="11" font-weight="700" fill="#0a0a0a">500 Licences → '26</text>
+      <text x="310" y="594" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#555">Personal · Academic</text>
+      <text x="310" y="607" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#555">Touring · B2B</text>
+      <text x="310" y="622" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7" fill="#888">NE: Expertise / Standards</text>
+
+      <!-- ─── CONTENT LIBRARY (central asset) ─── -->
+      <rect x="494" y="444" width="112" height="36" fill="url(#hatch)" fill-opacity="0.35"/>
+      <rect x="494" y="444" width="112" height="36" fill="none" stroke="#0a0a0a" stroke-width="1.2"/>
+      <text x="550" y="458" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#0a0a0a" letter-spacing="0.1em">CONTENT LIBRARY</text>
+      <text x="550" y="471" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7" fill="#555">300 works · Content: €170K '24</text>
+      <line x1="550" y1="430" x2="550" y2="444" stroke="#0a0a0a" stroke-width="0.8" stroke-dasharray="2 2"/>
+
+      <!-- ─── 4DS IP ASSET ─── -->
+      <rect x="494" y="244" width="112" height="32" fill="none" stroke="#0a0a0a" stroke-width="1" stroke-dasharray="4 2"/>
+      <text x="550" y="257" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#0a0a0a" letter-spacing="0.1em">4DS IP CORE</text>
+      <text x="550" y="270" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7" fill="#555">3–5yr tech lead · Software</text>
+      <line x1="550" y1="276" x2="550" y2="286" stroke="#0a0a0a" stroke-width="0.8" stroke-dasharray="2 2"/>
+
+      <!-- ─── GRID ANNOTATION LABELS ─── -->
+      <!-- NE type badges -->
+      <rect x="30" y="356" width="66" height="14" fill="white" stroke="#0a0a0a" stroke-width="1"/>
+      <rect x="30" y="356" width="4" height="14" fill="#0a0a0a"/>
+      <text x="100" y="366" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="7" fill="#0a0a0a" letter-spacing="0.1em">PLATFORM NE</text>
+
+      <rect x="30" y="378" width="66" height="14" fill="url(#hatch)" fill-opacity="0.3"/>
+      <rect x="30" y="378" width="66" height="14" fill="none" stroke="#555" stroke-width="1"/>
+      <text x="100" y="388" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="7" fill="#555" letter-spacing="0.1em">DATA NE</text>
+
+      <rect x="30" y="400" width="66" height="14" fill="white" stroke="#555" stroke-width="0.8" stroke-dasharray="3 2"/>
+      <text x="100" y="410" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="7" fill="#555" letter-spacing="0.1em">EXPERTISE NE</text>
+
+      <rect x="30" y="422" width="66" height="14" fill="white" stroke="#888" stroke-width="0.8"/>
+      <text x="100" y="432" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="7" fill="#888" letter-spacing="0.1em">SOCIAL NE</text>
+
+      <!-- Dimension annotations -->
+      <line x1="112" y1="660" x2="988" y2="660" stroke="#ccc" stroke-width="0.6"/>
+      <line x1="112" y1="655" x2="112" y2="665" stroke="#ccc" stroke-width="0.8"/>
+      <line x1="988" y1="655" x2="988" y2="665" stroke="#ccc" stroke-width="0.8"/>
+      <text x="550" y="672" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#aaa" letter-spacing="0.15em">PLATFORM ECOSYSTEM SPAN — 6 PARTICIPANT TYPES · 4 NE TYPES ACTIVE</text>
+
+      <!-- Cross-side label -->
+      <text x="550" y="138" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#aaa" letter-spacing="0.1em">⬝ — — — — — CROSS-SIDE NETWORK EFFECTS — — — — — ⬝</text>
+
+      <!-- Flywheel rotation hint -->
+      <path d="M 460 358 A 92 92 0 0 1 550 266" fill="none" stroke="#ddd" stroke-width="1.2" stroke-dasharray="4 6" marker-end="url(#arr-dim)"/>
+      <text x="450" y="302" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="6.5" fill="#bbb" transform="rotate(-45, 450, 302)">flywheel</text>
+
+      <!-- Coord labels -->
+      <text x="28" y="18" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#ccc">[0,0]</text>
+      <text x="1080" y="18" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#ccc">[1100,0]</text>
+      <text x="28" y="692" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#ccc">[0,700]</text>
+      <text x="1080" y="692" text-anchor="end" font-family="IBM Plex Mono, monospace" font-size="7.5" fill="#ccc">[1100,700]</text>
+    </svg>
+  </div>
+
+  <!-- REVENUE STREAMS GRID -->
+  <div class="rev-section">
+    <div class="section-head">
+      <h2>Revenue Architecture</h2>
+      <span>8 streams · Total revenue €1.88M projected 2026 · EBITDA margin 29%</span>
+    </div>
+    <div class="rev-grid">
+
+      <!-- R1: IP Licences -->
+      <div class="rev-card">
+        <div class="rev-card-inner">
+          <div class="rev-stream-id">R-01 · SOFTWARE &amp; IP</div>
+          <div class="rev-stream-name">IP Licence Fees</div>
+          <div class="rev-figures">
+            <div class="rev-fig"><span class="year">'23</span> <span class="amount">€42K</span></div>
+            <span class="rev-arrow">→</span>
+            <div class="rev-fig"><span class="year">'24</span> <span class="amount">€61K</span></div>
+            <span class="rev-arrow">→</span>
+            <div class="rev-fig"><span class="year">'26</span> <span class="amount">€237K</span></div>
+          </div>
+          <div>
+            <div class="pricing-row"><span class="p-type">Full studio install</span><span class="p-rate">€20K pa</span></div>
+            <div class="pricing-row"><span class="p-type">Playback installation</span><span class="p-rate">€7.2K pa</span></div>
+            <div class="pricing-row"><span class="p-type">Academic (20 students)</span><span class="p-rate">€3.5K pa</span></div>
+            <div class="pricing-row"><span class="p-type">Personal licence</span><span class="p-rate">€36/mo · €400pa</span></div>
+            <div class="pricing-row"><span class="p-type">Touring / day-rate</span><span class="p-rate">€600/mo · €250/day</span></div>
+            <div class="pricing-row"><span class="p-type">B2B white-label</span><span class="p-rate">TBD</span></div>
+          </div>
+          <div class="rev-nfx">NE link: <strong>Platform NE</strong> — installed base compounds switching cost</div>
+        </div>
+      </div>
+
+      <!-- R2: Content Residencies -->
+      <div class="rev-card">
+        <div class="rev-card-inner">
+          <div class="rev-stream-id">R-02 · CONTENT</div>
+          <div class="rev-stream-name">Residency Income</div>
+          <div class="rev-figures">
+            <div class="rev-fig"><span class="year">'23</span> <span class="amount">€46K</span></div>
+            <span class="rev-arrow">→</span>
+            <div class="rev-fig"><span class="year">'24</span> <span class="amount">€102K</span></div>
+            <span class="rev-arrow">→</span>
+            <div class="rev-fig"><span class="year">'26</span> <span class="amount">€121K</span></div>
+          </div>
+          <div>
+            <span class="rev-source-tag">Artists pay</span>
+            <span class="rev-source-tag">Studio weeks</span>
+            <span class="rev-source-tag">MONOM Berlin</span>
+          </div>
+          <div style="margin-top:6px;">
+            <div class="pricing-row"><span class="p-type">Studio weeks booked</span><span class="p-rate">14→28 pw '26</span></div>
+            <div class="pricing-row"><span class="p-type">Content in Library</span><span class="p-rate">300 → 400 works</span></div>
+          </div>
+          <div class="rev-nfx">NE link: <strong>Data NE</strong> — each residency = new content asset = deeper library</div>
+        </div>
+      </div>
+
+      <!-- R3: Content Licensing -->
+      <div class="rev-card">
+        <div class="rev-card-inner">
+          <div class="rev-stream-id">R-03 · CONTENT</div>
+          <div class="rev-stream-name">Content Licensing</div>
+          <div class="rev-figures">
+            <div class="rev-fig"><span class="year">'23</span> <span class="amount">€58K</span></div>
+            <span class="rev-arrow">→</span>
+            <div class="rev-fig"><span class="year">'24</span> <span class="amount">€54K</span></div>
+            <span class="rev-arrow">→</span>
+            <div class="rev-fig"><span class="year">'26</span> <span class="amount">€48K</span></div>
+          </div>
+          <div>
+            <span class="rev-source-tag">B2B licences</span>
+            <span class="rev-source-tag">Content library</span>
+            <span class="rev-source-tag">Archive IP</span>
+          </div>
+          <div style="margin-top:6px;">
+            <div class="pricing-row"><span class="p-type">Outbound content IP</span><span class="p-rate">Per-use licences</span></div>
+            <div class="pricing-row"><span class="p-type">Archive exploitation</span><span class="p-rate">Ongoing</span></div>
+          </div>
+          <div class="rev-nfx">NE link: <strong>Data NE</strong> — library depth makes content more licenseable</div>
+        </div>
+      </div>
+
+      <!-- R4: Content Presenting -->
+      <div class="rev-card">
+        <div class="rev-card-inner">
+          <div class="rev-stream-id">R-04 · CONTENT</div>
+          <div class="rev-stream-name">Content Presenting</div>
+          <div class="rev-figures">
+            <div class="rev-fig"><span class="year">'23</span> <span class="amount">€119K</span></div>
+            <span class="rev-arrow">→</span>
+            <div class="rev-fig"><span class="year">'24</span> <span class="amount">€149K</span></div>
+            <span class="rev-arrow">→</span>
+            <div class="rev-fig"><span class="year">'26</span> <span class="amount">€337K</span></div>
+          </div>
+          <div>
+            <span class="rev-source-tag">Ticket sales</span>
+            <span class="rev-source-tag">Presenter fees</span>
+            <span class="rev-source-tag">Concerts</span>
+          </div>
+          <div style="margin-top:6px;">
+            <div class="pricing-row"><span class="p-type">Live experiences</span><span class="p-rate">3 → 12 pa '26</span></div>
+            <div class="pricing-row"><span class="p-type">Audience-facing events</span><span class="p-rate">100K+ reached</span></div>
+          </div>
+          <div class="rev-nfx">NE link: <strong>Social NE</strong> — audience scale drives artist demand &amp; prestige</div>
+        </div>
+      </div>
+
+      <!-- R5: Education -->
+      <div class="rev-card">
+        <div class="rev-card-inner">
+          <div class="rev-stream-id">R-05 · EDUCATION</div>
+          <div class="rev-stream-name">Education Programmes</div>
+          <div class="rev-figures">
+            <div class="rev-fig"><span class="year">'23</span> <span class="amount">€27K</span></div>
+            <span class="rev-arrow">→</span>
+            <div class="rev-fig"><span class="year">'24</span> <span class="amount">€63K</span></div>
+            <span class="rev-arrow">→</span>
+            <div class="rev-fig"><span class="year">'26</span> <span class="amount">€174K</span></div>
+          </div>
+          <div>
+            <span class="rev-source-tag">Workshops</span>
+            <span class="rev-source-tag">HKU Utrecht</span>
+            <span class="rev-source-tag">Masterclasses</span>
+          </div>
+          <div style="margin-top:6px;">
+            <div class="pricing-row"><span class="p-type">Edu workshops pa</span><span class="p-rate">1 → 7 '26</span></div>
+            <div class="pricing-row"><span class="p-type">Academic subscriptions</span><span class="p-rate">€3.5K pa/inst.</span></div>
+          </div>
+          <div class="rev-nfx">NE link: <strong>Expertise NE</strong> — trained users reinforce 4DS as standard</div>
+        </div>
+      </div>
+
+      <!-- R6: Project Income -->
+      <div class="rev-card">
+        <div class="rev-card-inner">
+          <div class="rev-stream-id">R-06 · PROJECTS</div>
+          <div class="rev-stream-name">Project Income</div>
+          <div class="rev-figures">
+            <div class="rev-fig"><span class="year">'23</span> <span class="amount">€47K</span></div>
+            <span class="rev-arrow">→</span>
+            <div class="rev-fig"><span class="year">'24</span> <span class="amount">€64K</span></div>
+            <span class="rev-arrow">→</span>
+            <div class="rev-fig"><span class="year">'26</span> <span class="amount">€115K</span></div>
+          </div>
+          <div>
+            <span class="rev-source-tag">Consulting</span>
+            <span class="rev-source-tag">Commissions</span>
+            <span class="rev-source-tag">Bespoke installs</span>
+          </div>
+          <div style="margin-top:6px;">
+            <div class="pricing-row"><span class="p-type">One-off consulting</span><span class="p-rate">Variable</span></div>
+            <div class="pricing-row"><span class="p-type">Commissioned works</span><span class="p-rate">Per-project</span></div>
+          </div>
+          <div class="rev-nfx">NE link: <strong>Expertise NE</strong> — reputation attracts premium commissions</div>
+        </div>
+      </div>
+
+      <!-- R7: Grants/Research -->
+      <div class="rev-card">
+        <div class="rev-card-inner">
+          <div class="rev-stream-id">R-07 · RESEARCH</div>
+          <div class="rev-stream-name">Public Grants / Research</div>
+          <div class="rev-figures">
+            <div class="rev-fig"><span class="year">'23</span> <span class="amount">€111K</span></div>
+            <span class="rev-arrow">→</span>
+            <div class="rev-fig"><span class="year">'24</span> <span class="amount">€182K</span></div>
+            <span class="rev-arrow">→</span>
+            <div class="rev-fig"><span class="year">'26</span> <span class="amount">€233K</span></div>
+          </div>
+          <div>
+            <span class="rev-source-tag">EU Horizon</span>
+            <span class="rev-source-tag">XTREME</span>
+            <span class="rev-source-tag">NL/DE public</span>
+          </div>
+          <div style="margin-top:6px;">
+            <div class="pricing-row"><span class="p-type">Funded research pa</span><span class="p-rate">€130K–€262K</span></div>
+            <div class="pricing-row"><span class="p-type">Institutional grants</span><span class="p-rate">Multi-year</span></div>
+          </div>
+          <div class="rev-nfx">NE link: <strong>Expertise NE</strong> — research depth validates platform credibility</div>
+        </div>
+      </div>
+
+      <!-- R8: New Spaces -->
+      <div class="rev-card">
+        <div class="rev-card-inner">
+          <div class="rev-stream-id">R-08 · INFRASTRUCTURE</div>
+          <div class="rev-stream-name">Creating New Spaces</div>
+          <div class="rev-figures">
+            <div class="rev-fig"><span class="year">'23</span> <span class="amount">€148K</span></div>
+            <span class="rev-arrow">→</span>
+            <div class="rev-fig"><span class="year">'24</span> <span class="amount">€326K</span></div>
+            <span class="rev-arrow">→</span>
+            <div class="rev-fig"><span class="year">'26</span> <span class="amount">€618K</span></div>
+          </div>
+          <div>
+            <span class="rev-source-tag">Hardware sales</span>
+            <span class="rev-source-tag">Omni speakers</span>
+            <span class="rev-source-tag">Engineering</span>
+          </div>
+          <div style="margin-top:6px;">
+            <div class="pricing-row"><span class="p-type">Studios at year end</span><span class="p-rate">4 → 12 '26</span></div>
+            <div class="pricing-row"><span class="p-type">Omni speakers sold</span><span class="p-rate">49 → 144 pa</span></div>
+          </div>
+          <div class="rev-nfx">NE link: <strong>Platform NE</strong> — each new space = new node = stronger network</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CROSS-SIDE MATRIX + FLYWHEEL -->
+  <div class="bottom-strip">
+
+    <!-- Cross-side matrix -->
+    <div class="strip-panel">
+      <div class="section-head" style="margin-bottom:12px;">
+        <h2>Cross-Side Network Effect Matrix</h2>
+        <span>Strength of mutual reinforcement between participant nodes</span>
+      </div>
+      <table class="matrix">
+        <thead>
+          <tr>
+            <th>When ↓ grows →</th>
+            <th>Artists</th>
+            <th>Venues</th>
+            <th>Audiences</th>
+            <th>SW Users</th>
+            <th>Education</th>
+            <th>Revenue link</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Artists</td>
+            <td class="m-diag">—</td>
+            <td class="m-hi">↑↑ Content supply</td>
+            <td class="m-hi">↑↑ Experience depth</td>
+            <td class="m-mid">↑ Collab demand</td>
+            <td class="m-mid">↑ Faculty supply</td>
+            <td class="m-mid">R-02, R-04</td>
+          </tr>
+          <tr>
+            <td>Venues</td>
+            <td class="m-hi">↑↑ Residency slots</td>
+            <td class="m-diag">—</td>
+            <td class="m-hi">↑↑ Access points</td>
+            <td class="m-mid">↑ HW demand</td>
+            <td class="m-low">→ Facilities</td>
+            <td class="m-mid">R-01, R-08</td>
+          </tr>
+          <tr>
+            <td>Audiences</td>
+            <td class="m-mid">↑ Prestige / pull</td>
+            <td class="m-hi">↑↑ Rev. justifies</td>
+            <td class="m-diag">—</td>
+            <td class="m-low">→ Awareness</td>
+            <td class="m-low">→ Interest</td>
+            <td class="m-mid">R-04</td>
+          </tr>
+          <tr>
+            <td>SW Users</td>
+            <td class="m-hi">↑↑ Creator supply</td>
+            <td class="m-mid">↑ New spaces</td>
+            <td class="m-mid">↑ Content supply</td>
+            <td class="m-diag">—</td>
+            <td class="m-mid">↑ Trained pool</td>
+            <td class="m-mid">R-01, R-05</td>
+          </tr>
+          <tr>
+            <td>Education</td>
+            <td class="m-hi">↑↑ Trained artists</td>
+            <td class="m-low">→ Long-term</td>
+            <td class="m-low">→ Slow build</td>
+            <td class="m-mid">↑ Licence-holders</td>
+            <td class="m-diag">—</td>
+            <td class="m-mid">R-05, R-07</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-top:10px;font-size:8px;color:var(--ink-dim);letter-spacing:0.05em;line-height:1.7;">
+        <strong style="color:var(--ink-mid);">↑↑ Strong cross-side</strong> — primary defensibility moat &nbsp;·&nbsp;
+        <strong style="color:var(--ink-light);">↑ Moderate</strong> — secondary reinforcement &nbsp;·&nbsp;
+        <strong style="color:var(--ink-faint);">→ Weak / indirect</strong><br>
+        Strongest loops: Artists ↔ Venues (content platform) · Artists ↔ Audiences (demand pull)
+      </div>
+    </div>
+
+    <!-- Flywheel -->
+    <div class="strip-panel" style="border-left:1px solid var(--rule);">
+      <div class="section-head" style="margin-bottom:14px;">
+        <h2>Growth Flywheel</h2>
+        <span>Self-reinforcing loop</span>
+      </div>
+      <ol class="fw-steps">
+        <li>
+          <div class="fw-num">1</div>
+          <div class="fw-text-wrap">
+            <div class="fw-step-name">More Venues Installed</div>
+            <div class="fw-step-desc">Capital deploys to build out studio network — 6 → 12+ spaces. Each new space = new platform node.</div>
+            <div class="fw-rev-link">→ R-08 (€618K), R-01 (licence fees)</div>
+          </div>
+        </li>
+        <li>
+          <div class="fw-num">2</div>
+          <div class="fw-text-wrap">
+            <div class="fw-step-name">More Artists Join</div>
+            <div class="fw-step-desc">Venue depth attracts more creators. Residencies, touring installations, and commissions expand creator node.</div>
+            <div class="fw-rev-link">→ R-02 (residencies), R-03 (licensing)</div>
+          </div>
+        </li>
+        <li>
+          <div class="fw-num">3</div>
+          <div class="fw-text-wrap">
+            <div class="fw-step-name">Content Library Deepens</div>
+            <div class="fw-step-desc">300 → 400+ works. Richer library raises the value of every venue licence. Data NE compounds.</div>
+            <div class="fw-rev-link">→ R-03 (content licensing), IP value ↑</div>
+          </div>
+        </li>
+        <li>
+          <div class="fw-num">4</div>
+          <div class="fw-text-wrap">
+            <div class="fw-step-name">More Audiences Reached</div>
+            <div class="fw-step-desc">Better content + more access points = more experiences. 100K+ listeners. Social NE activates tribal identity.</div>
+            <div class="fw-rev-link">→ R-04 (presenting €337K '26)</div>
+          </div>
+        </li>
+        <li>
+          <div class="fw-num">5</div>
+          <div class="fw-text-wrap">
+            <div class="fw-step-name">→ Repeat: Stronger Platform</div>
+            <div class="fw-step-desc">Audience demand pulls in more artists. Artists pull in more venues. Revenue base diversifies. Each loop raises defensibility.</div>
+            <div class="fw-rev-link">→ Total: €1.88M '26 · EBITDA 29%</div>
+          </div>
+        </li>
+      </ol>
+    </div>
+
+  </div>
+
+  <!-- DOCUMENT FOOTER -->
+  <div class="doc-footer">
+    <div class="footer-left">
+      SONOSPACE BV &nbsp;/&nbsp; SPC-STRAT-001 &nbsp;/&nbsp; Network Effects Ecosystem Schematic<br>
+      Business Plan v6 · July 2024 · Data: 2023 actuals + 2024–2026 budgeted projections &nbsp;·&nbsp; Confidential
+    </div>
+    <div class="footer-right">
+      Framework: NFX Network Effects Bible · a16z Dynamics of Network Effects<br>
+      Gary Fox Platform Model · Thielke Platform Ecosystems<br>
+      Metcalfe's Law (V ∝ n²) · Reed's Law (community subgroups)
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
